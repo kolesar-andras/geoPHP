@@ -6,7 +6,7 @@
     "homepage": "https://github.com/swen100/geoPHP",
     "authors":[
         {
-            "name":"Patrick Hayes, Swen Zanon"
+            "name":"Patrick Hayes, Báthory Péter, Swen Zanon"
         }
     ],
     "autoload": {
