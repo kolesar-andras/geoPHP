@@ -6,19 +6,31 @@
     "homepage": "https://github.com/swen100/geoPHP",
     "authors":[
         {
-            "name":"Patrick Hayes, Báthory Péter, Swen Zanon"
+            "name": "Patrick Hayes",
+            "homepage": "https://github.com/Patrick-Hayes",
+            "role": "Developer"
+        },
+        {
+            "name": "Báthory Péter",
+            "homepage": "https://github.com/BathoryPeter",
+            "role": "Developer"
+        },
+        {
+            "name": "Swen Zanon",
+            "homepage": "https://github.com/swen100",
+            "role": "Developer"
         }
     ],
-    "autoload": {
-        "psr-4": {
-            "geoPHP\\": "src/"
-        }
-    },
     "require": {
         "php": ">=5.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "4.8.*",
-	"satooshi/php-coveralls": "1.*"
+        "satooshi/php-coveralls": "1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "geoPHP\\": "src/"
+        }
     }
 }
