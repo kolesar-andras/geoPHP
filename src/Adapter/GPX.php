@@ -184,6 +184,7 @@ class GPX implements GeoAdapter
         $collection = [];
         $trk_elements = $xmlObject->getElementsByTagName('trk');
         foreach ($trk_elements as $trk) {
+            $lines = [];
             /** @noinspection SpellCheckingInspection */
             foreach ($this->childElements($trk, 'trkseg') as $trackSegment) {
                 $points = [];
