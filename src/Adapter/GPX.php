@@ -36,6 +36,12 @@ class GPX implements GeoAdapter
     protected $xpath;
     protected $parseGarminRpt = false;
     protected $trackFromRoute = null;
+    
+    /**
+     *
+     * @var boolean add elevation-data to every coordinate
+     */
+    public $withElevation = false;
 
     /**
      * Read GPX string into geometry object
@@ -138,7 +144,7 @@ class GPX implements GeoAdapter
         $lon = $node->attributes->getNamedItem("lon")->nodeValue;
         $elevation = null;
         $ele = $node->getElementsByTagName('ele');
-        if ($ele->length) {
+        if ($this->withElevation && $ele->length) {
             $elevation = $ele->item(0)->nodeValue;
             $point = new Point($lon, $lat, $elevation <> 0 ? $elevation : null);
         } else {
@@ -215,13 +221,13 @@ class GPX implements GeoAdapter
         $lines = [];
         $rte_elements = $xmlObject->getElementsByTagName('rte');
         foreach ($rte_elements as $rte) {
-            $components = [];
+            $points = [];
             /** @noinspection SpellCheckingInspection */
             foreach ($this->childElements($rte, 'rtept') as $routePoint) {
                 /** @noinspection SpellCheckingInspection */
-                $components[] = $this->parsePoint($routePoint);
+                $points[] = $this->parsePoint($routePoint);
             }
-            $line = new LineString($components);
+            $line = new LineString($points);
             $line->setData($this->parseNodeProperties($rte, $this->gpxTypes->get('rteType')));
             $line->setData('gpxType', 'route');
             $lines[] = $line;
