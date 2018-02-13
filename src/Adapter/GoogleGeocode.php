@@ -165,15 +165,15 @@ class GoogleGeocode implements GeoAdapter
 
     private function getPolygon($delta = 0)
     {
-        $points = array(
+        $points = [
             $this->getTopLeft($delta),
             $this->getTopRight($delta),
             $this->getBottomRight($delta),
             $this->getBottomLeft($delta),
             $this->getTopLeft($delta),
-        );
+        ];
         $outer_ring = new LineString($points);
-        return new Polygon(array($outer_ring));
+        return new Polygon([$outer_ring]);
     }
 
     private function getTopLeft($delta = 0)

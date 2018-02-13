@@ -150,7 +150,7 @@ class GeoRSS implements GeoAdapter
             if ($polygon->hasChildNodes()) {
                 $points = $this->getPointsFromCoordinates(trim($polygon->firstChild->nodeValue));
                 $exterior_ring = new LineString($points);
-                $polygons[] = new Polygon(array($exterior_ring));
+                $polygons[] = new Polygon([$exterior_ring]);
             } else {
                 // It's an EMPTY polygon
                 $polygons[] = new Polygon();
@@ -166,15 +166,15 @@ class GeoRSS implements GeoAdapter
         $box_elements = $this->xmlObject->getElementsByTagName('box');
         foreach ($box_elements as $box) {
             $parts = explode(' ', trim($box->firstChild->nodeValue));
-            $components = array(
+            $components = [
                 new Point($parts[3], $parts[2]),
                 new Point($parts[3], $parts[0]),
                 new Point($parts[1], $parts[0]),
                 new Point($parts[1], $parts[2]),
                 new Point($parts[3], $parts[2]),
-            );
+            ];
             $exterior_ring = new LineString($components);
-            $polygons[] = new Polygon(array($exterior_ring));
+            $polygons[] = new Polygon([$exterior_ring]);
         }
         return $polygons;
     }

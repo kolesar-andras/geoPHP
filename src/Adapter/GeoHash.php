@@ -25,54 +25,52 @@ class GeoHash implements GeoAdapter
     /**
      * array of neighbouring hash character maps.
      */
-    private static $neighbours = array(
-        // north
-        'top' => array(
+    private static $neighbours = [
+        'top' => [
             'even' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
             'odd' => 'bc01fg45238967deuvhjyznpkmstqrwx'
-        ),
+        ],
         // east
-        'right' => array(
+        'right' => [
             'even' => 'bc01fg45238967deuvhjyznpkmstqrwx',
             'odd' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'
-        ),
+        ],
         // west
-        'left' => array(
+        'left' => [
             'even' => '238967debc01fg45kmstqrwxuvhjyznp',
             'odd' => '14365h7k9dcfesgujnmqp0r2twvyx8zb'
-        ),
+        ],
         // south
-        'bottom' => array(
+        'bottom' => [
             'even' => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
             'odd' => '238967debc01fg45kmstqrwxuvhjyznp'
-        )
-    );
+        ]
+    ];
 
     /**
      * array of bordering hash character maps.
      */
-    private static $borders = array(
-        // north
-        'top' => array(
+    private static $borders = [
+        'top' => [
             'even' => 'prxz',
             'odd' => 'bcfguvyz'
-        ),
+        ],
         // east
-        'right' => array(
+        'right' => [
             'even' => 'bcfguvyz',
             'odd' => 'prxz'
-        ),
+        ],
         // west
-        'left' => array(
+        'left' => [
             'even' => '0145hjnp',
             'odd' => '028b'
-        ),
+        ],
         // south
-        'bottom' => array(
+        'bottom' => [
             'even' => '028b',
             'odd' => '0145hjnp'
-        )
-    );
+        ]
+    ];
 
     /**
      * Convert the geoHash to a Point. The point is 2-dimensional.
@@ -87,15 +85,15 @@ class GeoHash implements GeoAdapter
         if (!$as_grid) {
             return new Point($decodedHash['centerLongitude'], $decodedHash['centerLatitude']);
         } else {
-            return new Polygon(array(
-                new LineString(array(
+            return new Polygon([
+                new LineString([
                     new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
                     new Point($decodedHash['maxLongitude'], $decodedHash['maxLatitude']),
                     new Point($decodedHash['maxLongitude'], $decodedHash['minLatitude']),
                     new Point($decodedHash['minLongitude'], $decodedHash['minLatitude']),
                     new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
-                    ))
-            ));
+                ])
+            ]);
         }
     }
 
