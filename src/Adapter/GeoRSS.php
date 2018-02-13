@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Adapter;
 
 use geoPHP\Geometry\Collection;
@@ -21,12 +20,13 @@ use geoPHP\Geometry\Polygon;
 /**
  * PHP Geometry/GeoRSS encoder/decoder
  */
-class GeoRSS implements GeoAdapter {
+class GeoRSS implements GeoAdapter
+{
+
     /**
      * @var \DOMDocument $xmlObject
      */
     protected $xmlObject;
-
     private $namespace = false;
     private $nss = ''; // Name-space string. eg 'georss:'
 
@@ -37,7 +37,9 @@ class GeoRSS implements GeoAdapter {
      *
      * @return Geometry|GeometryCollection
      */
-    public function read($georss) {
+
+    public function read($georss)
+    {
         return $this->geomFromText($georss);
     }
 
@@ -48,7 +50,8 @@ class GeoRSS implements GeoAdapter {
      * @param boolean|string $namespace
      * @return string The georss string representation of the input geometries
      */
-    public function write(Geometry $geometry, $namespace = false) {
+    public function write(Geometry $geometry, $namespace = false)
+    {
         if ($namespace) {
             $this->namespace = $namespace;
             $this->nss = $namespace . ':';
@@ -56,7 +59,8 @@ class GeoRSS implements GeoAdapter {
         return $this->geometryToGeoRSS($geometry);
     }
 
-    public function geomFromText($text) {
+    public function geomFromText($text)
+    {
         // Change to lower-case, strip all CDATA, and de-namespace
         $text = strtolower($text);
         $text = preg_replace('/<!\[cdata\[(.*?)\]\]>/s', '', $text);
@@ -78,13 +82,17 @@ class GeoRSS implements GeoAdapter {
         return $geom;
     }
 
-    protected function geomFromXML() {
-        $geometries = array();
-        $geometries = array_merge($geometries, $this->parsePoints());
-        $geometries = array_merge($geometries, $this->parseLines());
-        $geometries = array_merge($geometries, $this->parsePolygons());
-        $geometries = array_merge($geometries, $this->parseBoxes());
-        $geometries = array_merge($geometries, $this->parseCircles());
+    protected function geomFromXML()
+    {
+        $geometries = [];
+        $geometries = array_merge(
+            $geometries, 
+            $this->parsePoints(), 
+            $this->parseLines(), 
+            $this->parsePolygons(), 
+            $this->parseBoxes(), 
+            $this->parseCircles()
+        );
 
         if (empty($geometries)) {
             throw new \Exception("Invalid / Empty GeoRSS");
@@ -93,7 +101,8 @@ class GeoRSS implements GeoAdapter {
         return geoPHP::geometryReduce($geometries);
     }
 
-    protected function getPointsFromCoordinates($string) {
+    protected function getPointsFromCoordinates($string)
+    {
         $coordinates = [];
         $latitudeAndLongitude = explode(' ', $string);
         $lat = 0;
@@ -110,7 +119,8 @@ class GeoRSS implements GeoAdapter {
         return $coordinates;
     }
 
-    protected function parsePoints() {
+    protected function parsePoints()
+    {
         $points = [];
         $pt_elements = $this->xmlObject->getElementsByTagName('point');
         foreach ($pt_elements as $pt) {
@@ -120,7 +130,8 @@ class GeoRSS implements GeoAdapter {
         return $points;
     }
 
-    protected function parseLines() {
+    protected function parseLines()
+    {
         $lines = [];
         $line_elements = $this->xmlObject->getElementsByTagName('line');
         foreach ($line_elements as $line) {
@@ -130,7 +141,8 @@ class GeoRSS implements GeoAdapter {
         return $lines;
     }
 
-    protected function parsePolygons() {
+    protected function parsePolygons()
+    {
         $polygons = [];
         $polygonElements = $this->xmlObject->getElementsByTagName('polygon');
         foreach ($polygonElements as $polygon) {
@@ -148,17 +160,18 @@ class GeoRSS implements GeoAdapter {
     }
 
     // Boxes are rendered into polygons
-    protected function parseBoxes() {
+    protected function parseBoxes()
+    {
         $polygons = [];
         $box_elements = $this->xmlObject->getElementsByTagName('box');
         foreach ($box_elements as $box) {
             $parts = explode(' ', trim($box->firstChild->nodeValue));
             $components = array(
-                    new Point($parts[3], $parts[2]),
-                    new Point($parts[3], $parts[0]),
-                    new Point($parts[1], $parts[0]),
-                    new Point($parts[1], $parts[2]),
-                    new Point($parts[3], $parts[2]),
+                new Point($parts[3], $parts[2]),
+                new Point($parts[3], $parts[0]),
+                new Point($parts[1], $parts[0]),
+                new Point($parts[1], $parts[2]),
+                new Point($parts[3], $parts[2]),
             );
             $exterior_ring = new LineString($components);
             $polygons[] = new Polygon(array($exterior_ring));
@@ -168,7 +181,8 @@ class GeoRSS implements GeoAdapter {
 
     // Circles are rendered into points
     // @@TODO: Add good support once we have circular-string geometry support
-    protected function parseCircles() {
+    protected function parseCircles()
+    {
         $points = [];
         $circle_elements = $this->xmlObject->getElementsByTagName('circle');
         foreach ($circle_elements as $circle) {
@@ -182,7 +196,8 @@ class GeoRSS implements GeoAdapter {
      * @param Geometry $geometry
      * @return string
      */
-    protected function geometryToGeoRSS($geometry) {
+    protected function geometryToGeoRSS($geometry)
+    {
         $type = $geometry->geometryType();
         switch ($type) {
             case Geometry::POINT:
@@ -197,7 +212,7 @@ class GeoRSS implements GeoAdapter {
             case Geometry::MULTI_LINE_STRING:
             case Geometry::MULTI_POLYGON:
             case Geometry::GEOMETRY_COLLECTION:
-            /** @noinspection PhpParamsInspection */
+                /** @noinspection PhpParamsInspection */
                 return $this->collectionToGeoRSS($geometry);
         }
         return null;
@@ -207,7 +222,8 @@ class GeoRSS implements GeoAdapter {
      * @param Geometry $geometry
      * @return string
      */
-    private function pointToGeoRSS($geometry) {
+    private function pointToGeoRSS($geometry)
+    {
         return '<' . $this->nss . 'point>' . $geometry->y() . ' ' . $geometry->x() . '</' . $this->nss . 'point>';
     }
 
@@ -215,7 +231,8 @@ class GeoRSS implements GeoAdapter {
      * @param LineString $geometry
      * @return string
      */
-    private function linestringToGeoRSS($geometry) {
+    private function linestringToGeoRSS($geometry)
+    {
         $output = '<' . $this->nss . 'line>';
         foreach ($geometry->getComponents() as $k => $point) {
             $output .= $point->y() . ' ' . $point->x();
@@ -231,13 +248,15 @@ class GeoRSS implements GeoAdapter {
      * @param Polygon $geometry
      * @return string
      */
-    private function polygonToGeoRSS($geometry) {
+    private function polygonToGeoRSS($geometry)
+    {
         $output = '<' . $this->nss . 'polygon>';
         $exterior_ring = $geometry->exteriorRing();
         foreach ($exterior_ring->getComponents() as $k => $point) {
             $output .= $point->y() . ' ' . $point->x();
-            if ($k < ($exterior_ring->numGeometries() - 1))
+            if ($k < ($exterior_ring->numGeometries() - 1)) {
                 $output .= ' ';
+            }
         }
         $output .= '</' . $this->nss . 'polygon>';
         return $output;
@@ -247,7 +266,8 @@ class GeoRSS implements GeoAdapter {
      * @param Collection $geometry
      * @return string
      */
-    public function collectionToGeoRSS($geometry) {
+    public function collectionToGeoRSS($geometry)
+    {
         $georss = '<' . $this->nss . 'where>';
         $components = $geometry->getComponents();
         foreach ($components as $component) {
@@ -258,5 +278,4 @@ class GeoRSS implements GeoAdapter {
 
         return $georss;
     }
-
 }

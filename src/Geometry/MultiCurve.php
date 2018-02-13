@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Geometry;
 
 /**
@@ -8,13 +7,16 @@ namespace geoPHP\Geometry;
  *
  * @package geoPHP\Geometry
  */
-abstract class MultiCurve extends MultiGeometry {
+abstract class MultiCurve extends MultiGeometry
+{
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::MULTI_CURVE;
     }
 
-    public function dimension() {
+    public function dimension()
+    {
         return 1;
     }
 
@@ -23,7 +25,8 @@ abstract class MultiCurve extends MultiGeometry {
      *
      * @return bool
      */
-    public function isClosed() {
+    public function isClosed()
+    {
         foreach ($this->getComponents() as $line) {
             if (!$line->isClosed()) {
                 return false;
@@ -32,4 +35,3 @@ abstract class MultiCurve extends MultiGeometry {
         return true;
     }
 }
-

@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Adapter;
 
 use geoPHP\Geometry\Geometry;
@@ -26,7 +25,9 @@ use geoPHP\Geometry\MultiPolygon;
  * @package    geoPHP
  * @author     Patrick Hayes <patrick.d.hayes@gmail.com>
  */
-class GoogleGeocode implements GeoAdapter {
+class GoogleGeocode implements GeoAdapter
+{
+
     /** @var \stdClass $result */
     protected $result;
 
@@ -44,7 +45,8 @@ class GoogleGeocode implements GeoAdapter {
      * @return Geometry|GeometryCollection
      * @throws \Exception If geocoding fails
      */
-    public function read($address, $apiKey=null, $return_type = 'point', $bounds = false, $return_multiple = false) {
+    public function read($address, $apiKey = null, $return_type = 'point', $bounds = false, $return_multiple = false)
+    {
         if (is_array($address)) {
             $address = join(',', $address);
         }
@@ -61,7 +63,7 @@ class GoogleGeocode implements GeoAdapter {
         $url = "http://maps.googleapis.com/maps/api/geocode/json";
         $url .= '?address=' . urlencode($address);
         $url .= $bounds_string . ($apiKey ? '&key=' . $apiKey : '');
-        $this->result = json_decode(@file_get_contents($url));
+        $this->result = json_decode(file_get_contents($url));
 
         if ($this->result->status == 'OK') {
             if (!$return_multiple) {
@@ -92,8 +94,8 @@ class GoogleGeocode implements GeoAdapter {
         } else {
             if ($this->result->status) {
                 throw new \Exception('Error in Google Reverse Geocoder: '
-                        . $this->result->status
-                        . (isset($this->result->error_message) ? '. '.$this->result->error_message : ''));
+                . $this->result->status
+                . (isset($this->result->error_message) ? '. ' . $this->result->error_message : ''));
             } else {
                 throw new \Exception('Unknown error in Google Reverse Geocoder');
             }
@@ -114,7 +116,8 @@ class GoogleGeocode implements GeoAdapter {
      * @return string|Object[]|null A formatted address or array of address components
      * @throws \Exception If geocoding fails
      */
-    public function write(Geometry $geometry, $apiKey=null, $return_type = 'string', $language=null) {
+    public function write(Geometry $geometry, $apiKey = null, $return_type = 'string', $language = null)
+    {
         $centroid = $geometry->centroid();
         $lat = $centroid->y();
         $lon = $centroid->x();
@@ -124,7 +127,7 @@ class GoogleGeocode implements GeoAdapter {
         $url .= '?latlng=' . $lat . ',' . $lon;
         $url .= ($language ? '&language=' . $language : '') . ($apiKey ? '&key=' . $apiKey : '');
 
-        $this->result = json_decode(@file_get_contents($url));
+        $this->result = json_decode(file_get_contents($url));
 
         if ($this->result->status == 'OK') {
             if ($return_type == 'string') {
@@ -133,7 +136,6 @@ class GoogleGeocode implements GeoAdapter {
                 return $this->result->results[0]->address_components;
             } else if ($return_type == 'full') {
                 return $this->result->results[0];
-
             }
         } else if ($this->result->status == 'ZERO_RESULTS') {
             if ($return_type == 'string') {
@@ -145,8 +147,8 @@ class GoogleGeocode implements GeoAdapter {
         } else {
             if ($this->result->status) {
                 throw new \Exception('Error in Google Reverse Geocoder: '
-                        . $this->result->status
-                        . (isset($this->result->error_message) ? '. '.$this->result->error_message : ''));
+                . $this->result->status
+                . (isset($this->result->error_message) ? '. ' . $this->result->error_message : ''));
             } else {
                 throw new \Exception('Unknown error in Google Reverse Geocoder');
             }
@@ -154,43 +156,49 @@ class GoogleGeocode implements GeoAdapter {
         return false;
     }
 
-    private function getPoint($delta = 0) {
+    private function getPoint($delta = 0)
+    {
         $lat = $this->result->results[$delta]->geometry->location->lat;
         $lon = $this->result->results[$delta]->geometry->location->lng;
         return new Point($lon, $lat);
     }
 
-    private function getPolygon($delta = 0) {
+    private function getPolygon($delta = 0)
+    {
         $points = array(
-                $this->getTopLeft($delta),
-                $this->getTopRight($delta),
-                $this->getBottomRight($delta),
-                $this->getBottomLeft($delta),
-                $this->getTopLeft($delta),
+            $this->getTopLeft($delta),
+            $this->getTopRight($delta),
+            $this->getBottomRight($delta),
+            $this->getBottomLeft($delta),
+            $this->getTopLeft($delta),
         );
         $outer_ring = new LineString($points);
         return new Polygon(array($outer_ring));
     }
 
-    private function getTopLeft($delta = 0) {
+    private function getTopLeft($delta = 0)
+    {
         $lat = $this->result->results[$delta]->geometry->bounds->northeast->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->southwest->lng;
         return new Point($lon, $lat);
     }
 
-    private function getTopRight($delta = 0) {
+    private function getTopRight($delta = 0)
+    {
         $lat = $this->result->results[$delta]->geometry->bounds->northeast->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->northeast->lng;
         return new Point($lon, $lat);
     }
 
-    private function getBottomLeft($delta = 0) {
+    private function getBottomLeft($delta = 0)
+    {
         $lat = $this->result->results[$delta]->geometry->bounds->southwest->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->southwest->lng;
         return new Point($lon, $lat);
     }
 
-    private function getBottomRight($delta = 0) {
+    private function getBottomRight($delta = 0)
+    {
         $lat = $this->result->results[$delta]->geometry->bounds->southwest->lat;
         $lon = $this->result->results[$delta]->geometry->bounds->northeast->lng;
         return new Point($lon, $lat);

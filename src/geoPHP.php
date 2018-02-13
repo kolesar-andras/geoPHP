@@ -13,67 +13,74 @@ use geoPHP\Geometry\Collection;
 use geoPHP\Geometry\Geometry;
 use geoPHP\Geometry\GeometryCollection;
 
-class geoPHP {
+class geoPHP
+{
 
-    static function version() {
+    static function version()
+    {
         return '2.0-dev';
     }
-
     // Earth radius constants in meters
 
     /** WGS84 semi-major axis (a), aka equatorial radius */
     const EARTH_WGS84_SEMI_MAJOR_AXIS = 6378137.0;
+
     /** WGS84 semi-minor axis (b), aka polar radius */
     const EARTH_WGS84_SEMI_MINOR_AXIS = 6356752.314245;
+
     /** WGS84 inverse flattening */
-    const EARTH_WGS84_FLATTENING      = 298.257223563;
+    const EARTH_WGS84_FLATTENING = 298.257223563;
 
     /** WGS84 semi-major axis (a), aka equatorial radius */
     const EARTH_GRS80_SEMI_MAJOR_AXIS = 6378137.0;
+
     /** GRS80 semi-minor axis */
     const EARTH_GRS80_SEMI_MINOR_AXIS = 6356752.314140;
+
     /** GRS80 inverse flattening */
-    const EARTH_GRS80_FLATTENING      = 298.257222100882711;
+    const EARTH_GRS80_FLATTENING = 298.257222100882711;
 
     /** IUGG mean radius R1 = (2a + b) / 3 */
-    const EARTH_MEAN_RADIUS           = 6371008.8;
+    const EARTH_MEAN_RADIUS = 6371008.8;
+
     /** IUGG R2: Earth's authalic ("equal area") radius is the radius of a hypothetical perfect sphere
      * which has the same surface area as the reference ellipsoid. */
-    const EARTH_AUTHALIC_RADIUS       = 6371007.2;
-
+    const EARTH_AUTHALIC_RADIUS = 6371007.2;
     const CLASS_NAMESPACE = 'geoPHP\\';
 
     private static $adapterMap = [
-            'wkt'            => 'WKT',
-            'ewkt'           => 'EWKT',
-            'wkb'            => 'WKB',
-            'ewkb'           => 'EWKB',
-            'json'           => 'GeoJSON',
-            'geojson'        => 'GeoJSON',
-            'kml'            => 'KML',
-            'gpx'            => 'GPX',
-            'georss'         => 'GeoRSS',
-            'google_geocode' => 'GoogleGeocode',
-            'geohash'        => 'GeoHash',
-            'twkb'           => 'TWKB',
-            'osm'            => 'OSM',
+        'wkt' => 'WKT',
+        'ewkt' => 'EWKT',
+        'wkb' => 'WKB',
+        'ewkb' => 'EWKB',
+        'json' => 'GeoJSON',
+        'geojson' => 'GeoJSON',
+        'kml' => 'KML',
+        'gpx' => 'GPX',
+        'georss' => 'GeoRSS',
+        'google_geocode' => 'GoogleGeocode',
+        'geohash' => 'GeoHash',
+        'twkb' => 'TWKB',
+        'osm' => 'OSM',
     ];
 
-    public static function getAdapterMap() {
+    public static function getAdapterMap()
+    {
         return self::$adapterMap;
     }
 
     private static $geometryList = [
-            'point'              => 'Point',
-            'linestring'         => 'LineString',
-            'polygon'            => 'Polygon',
-            'multipoint'         => 'MultiPoint',
-            'multilinestring'    => 'MultiLineString',
-            'multipolygon'       => 'MultiPolygon',
-            'geometrycollection' => 'GeometryCollection',
+        'point' => 'Point',
+        'linestring' => 'LineString',
+        'polygon' => 'Polygon',
+        'multipoint' => 'MultiPoint',
+        'multilinestring' => 'MultiLineString',
+        'multipolygon' => 'MultiPolygon',
+        'geometrycollection' => 'GeometryCollection',
     ];
 
-    public static function getGeometryList() {
+    public static function getGeometryList()
+    {
         return self::$geometryList;
     }
 
@@ -89,11 +96,12 @@ class geoPHP {
      * @return Collection|Geometry
      * @throws \Exception
      */
-    static function load($data) {
+    static function load($data)
+    {
         $args = func_get_args();
 
         $data = array_shift($args);
-        $type = count($args) && @array_key_exists($args[0], self::$adapterMap) ? strtolower(array_shift($args)) : null;
+        $type = count($args) && array_key_exists($args[0], self::$adapterMap) ? strtolower(array_shift($args)) : null;
 
         // Auto-detect type if needed
         if (!$type) {
@@ -136,7 +144,8 @@ class geoPHP {
         return $result;
     }
 
-    static function geosInstalled($force = null) {
+    static function geosInstalled($force = null)
+    {
         static $geos_installed = null;
         if ($force !== null) {
             $geos_installed = $force;
@@ -157,13 +166,14 @@ class geoPHP {
      * @return Geometry|null
      * @throws \Exception
      */
-    static function geosToGeometry($geos) {
+    static function geosToGeometry($geos)
+    {
         if (!geoPHP::geosInstalled()) {
             return null;
         }
-		/** @noinspection PhpUndefinedClassInspection */
+        /** @noinspection PhpUndefinedClassInspection */
         $wkb_writer = new \GEOSWKBWriter();
-		/** @noinspection PhpUndefinedMethodInspection */
+        /** @noinspection PhpUndefinedMethodInspection */
         $wkb = $wkb_writer->writeHEX($geos);
         $geometry = geoPHP::load($wkb, 'wkb', true);
         if ($geometry) {
@@ -183,7 +193,8 @@ class geoPHP {
      * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
      * @return bool|GeometryCollection
      */
-    public static function geometryReduce($geometries) {
+    public static function geometryReduce($geometries)
+    {
         if (empty($geometries)) {
             return false;
         }
@@ -220,7 +231,6 @@ class geoPHP {
          * So now we either have an array of geometries
          * @var Geometry[]|GeometryCollection[] $geometries
          */
-
         $reducedGeometries = [];
         $geometryTypes = [];
         self::_explodeCollections($geometries, $reducedGeometries, $geometryTypes);
@@ -233,7 +243,7 @@ class geoPHP {
             if (count($reducedGeometries) == 1) {
                 return $reducedGeometries[0];
             } else {
-                $class = self::CLASS_NAMESPACE . 'Geometry\\' . (strstr($geometryTypes[0], 'Multi') ? '' : 'Multi')  . $geometryTypes[0];
+                $class = self::CLASS_NAMESPACE . 'Geometry\\' . (strstr($geometryTypes[0], 'Multi') ? '' : 'Multi') . $geometryTypes[0];
                 return new $class($reducedGeometries);
             }
         } else {
@@ -244,7 +254,8 @@ class geoPHP {
     /**
      * @param Geometry[]|GeometryCollection[] $unreduced
      */
-    private static function _explodeCollections($unreduced, &$reduced, &$types) {
+    private static function _explodeCollections($unreduced, &$reduced, &$types)
+    {
         foreach ($unreduced as $item) {
             if ($item->geometryType() == 'GeometryCollection' || strpos($item->geometryType(), 'Multi') === 0) {
                 self::_explodeCollections($item->getComponents(), $reduced, $types);
@@ -263,7 +274,8 @@ class geoPHP {
      * @param Geometry|Geometry[]|GeometryCollection|GeometryCollection[] $geometries
      * @return GeometryCollection|null A Geometry of the "smallest", "most type-specific" class that can contain the elements.
      */
-    public static function buildGeometry($geometries) {
+    public static function buildGeometry($geometries)
+    {
         if (empty($geometries)) {
             return new GeometryCollection();
         }
@@ -284,7 +296,6 @@ class geoPHP {
          * So now we either have an array of geometries
          * @var Geometry[]|GeometryCollection[] $geometries
          */
-
         $geometryTypes = [];
         foreach ($geometries as $item) {
             if ($item) {
@@ -314,7 +325,8 @@ class geoPHP {
 
     // Detect a format given a value. This function is meant to be SPEEDY.
     // It could make a mistake in XML detection if you are mixing or using namespaces in weird ways (ie, KML inside an RSS feed)
-    public static function detectFormat(&$input) {
+    public static function detectFormat(&$input)
+    {
         $mem = fopen('php://memory', 'x+');
         fwrite($mem, $input, 11); // Write 11 bytes - we can detect the vast majority of formats in the first 11 bytes
         fseek($mem, 0);
@@ -398,7 +410,8 @@ class geoPHP {
         $string = trim(fread($mem, 8));
 
         // Detect geohash - geohash ONLY contains lowercase chars and numerics
-        preg_match('/['.GeoHash::$characterTable.']+/', $string, $matches);
+        $matches = [];
+        preg_match('/[' . GeoHash::$characterTable . ']+/', $string, $matches);
         if (isset($matches[0]) && $matches[0] == $string && strlen($input) <= 13) {
             return 'geohash';
         }
@@ -413,5 +426,4 @@ class geoPHP {
         // What do you get when you cross an elephant with a rhino?
         // http://youtu.be/RCBn5J83Poc
     }
-
 }

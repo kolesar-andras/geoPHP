@@ -84,7 +84,7 @@ class GPX implements GeoAdapter
         try {
             $geom = $this->geomFromXML($xmlObject);
         } catch (\Exception $e) {
-            throw new \Exception("Cannot Read Geometry From GPX: " . $gpx);
+            throw new \Exception("Cannot Read Geometry From GPX: " . $gpx . '<br>' . $e->getMessage());
         }
 
         return $geom;

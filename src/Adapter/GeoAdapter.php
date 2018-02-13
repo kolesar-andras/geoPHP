@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Adapter;
 
 use geoPHP\Geometry\Geometry;
@@ -17,7 +16,8 @@ use geoPHP\Geometry\Geometry;
  * for reading and writing to and from Geometry objects
  *
  */
-interface GeoAdapter {
+interface GeoAdapter
+{
 
     /**
      * Read input and return a Geometry

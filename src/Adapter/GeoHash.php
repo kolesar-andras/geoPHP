@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Adapter;
 
 use geoPHP\Geometry\Geometry;
@@ -14,63 +13,65 @@ use geoPHP\Geometry\Polygon;
  * @see http://en.wikipedia.org/wiki/Geohash
  *
  */
-class GeoHash implements GeoAdapter {
+class GeoHash implements GeoAdapter
+{
     /**
      * @var string
      */
+
     /** @noinspection SpellCheckingInspection */
     public static $characterTable = "0123456789bcdefghjkmnpqrstuvwxyz";
 
     /**
      * array of neighbouring hash character maps.
      */
-    private static $neighbours = array (
+    private static $neighbours = array(
         // north
-            'top' => array (
-                    'even' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
-                    'odd' => 'bc01fg45238967deuvhjyznpkmstqrwx'
-            ),
+        'top' => array(
+            'even' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy',
+            'odd' => 'bc01fg45238967deuvhjyznpkmstqrwx'
+        ),
         // east
-            'right' => array (
-                    'even' => 'bc01fg45238967deuvhjyznpkmstqrwx',
-                    'odd' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'
-            ),
+        'right' => array(
+            'even' => 'bc01fg45238967deuvhjyznpkmstqrwx',
+            'odd' => 'p0r21436x8zb9dcf5h7kjnmqesgutwvy'
+        ),
         // west
-            'left' => array (
-                    'even' => '238967debc01fg45kmstqrwxuvhjyznp',
-                    'odd' => '14365h7k9dcfesgujnmqp0r2twvyx8zb'
-            ),
+        'left' => array(
+            'even' => '238967debc01fg45kmstqrwxuvhjyznp',
+            'odd' => '14365h7k9dcfesgujnmqp0r2twvyx8zb'
+        ),
         // south
-            'bottom' => array (
-                    'even' => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
-                    'odd' => '238967debc01fg45kmstqrwxuvhjyznp'
-            )
+        'bottom' => array(
+            'even' => '14365h7k9dcfesgujnmqp0r2twvyx8zb',
+            'odd' => '238967debc01fg45kmstqrwxuvhjyznp'
+        )
     );
 
     /**
      * array of bordering hash character maps.
      */
-    private static $borders = array (
+    private static $borders = array(
         // north
-            'top' => array (
-                    'even' => 'prxz',
-                    'odd' => 'bcfguvyz'
-            ),
+        'top' => array(
+            'even' => 'prxz',
+            'odd' => 'bcfguvyz'
+        ),
         // east
-            'right' => array (
-                    'even' => 'bcfguvyz',
-                    'odd' => 'prxz'
-            ),
+        'right' => array(
+            'even' => 'bcfguvyz',
+            'odd' => 'prxz'
+        ),
         // west
-            'left' => array (
-                    'even' => '0145hjnp',
-                    'odd' => '028b'
-            ),
+        'left' => array(
+            'even' => '0145hjnp',
+            'odd' => '028b'
+        ),
         // south
-            'bottom' => array (
-                    'even' => '028b',
-                    'odd' => '0145hjnp'
-            )
+        'bottom' => array(
+            'even' => '028b',
+            'odd' => '0145hjnp'
+        )
     );
 
     /**
@@ -80,18 +81,19 @@ class GeoHash implements GeoAdapter {
      * @param boolean $as_grid Return the center point of hash grid or the grid cell as Polygon
      * @return Point|Polygon the converted GeoHash
      */
-    public function read($hash, $as_grid = false) {
+    public function read($hash, $as_grid = false)
+    {
         $decodedHash = $this->decode($hash);
         if (!$as_grid) {
             return new Point($decodedHash['centerLongitude'], $decodedHash['centerLatitude']);
         } else {
             return new Polygon(array(
-                    new LineString(array(
-                            new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
-                            new Point($decodedHash['maxLongitude'], $decodedHash['maxLatitude']),
-                            new Point($decodedHash['maxLongitude'], $decodedHash['minLatitude']),
-                            new Point($decodedHash['minLongitude'], $decodedHash['minLatitude']),
-                            new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
+                new LineString(array(
+                    new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
+                    new Point($decodedHash['maxLongitude'], $decodedHash['maxLatitude']),
+                    new Point($decodedHash['maxLongitude'], $decodedHash['minLatitude']),
+                    new Point($decodedHash['minLongitude'], $decodedHash['minLatitude']),
+                    new Point($decodedHash['minLongitude'], $decodedHash['maxLatitude']),
                     ))
             ));
         }
@@ -104,7 +106,8 @@ class GeoHash implements GeoAdapter {
      * @param float|null $precision
      * @return string the GeoHash or null when the $geometry is not a Point
      */
-    public function write(Geometry $geometry, $precision = null) {
+    public function write(Geometry $geometry, $precision = null)
+    {
         if ($geometry->isEmpty()) {
             return '';
         }
@@ -144,7 +147,8 @@ class GeoHash implements GeoAdapter {
      * @return string The GeoHash
      * @throws \Exception
      */
-    private function encodePoint($point, $precision = null) {
+    private function encodePoint($point, $precision = null)
+    {
         $minLatitude = -90.0000000000001;
         $maxLatitude = 90.0000000000001;
         $minLongitude = -180.0000000000001;
@@ -162,8 +166,8 @@ class GeoHash implements GeoAdapter {
         }
 
         if (
-                $point->x() < $minLongitude || $point->y() < $minLatitude ||
-                $point->x() > $maxLongitude || $point->y() > $maxLatitude
+            $point->x() < $minLongitude || $point->y() < $minLatitude ||
+            $point->x() > $maxLongitude || $point->y() > $maxLatitude
         ) {
             throw new \Exception("Point coordinates ({$point->x()}, {$point->y()}) are out of lat/lon range");
         }
@@ -207,7 +211,8 @@ class GeoHash implements GeoAdapter {
      * @param string $hash a GeoHash
      * @return array Associative array.
      */
-    private function decode($hash) {
+    private function decode($hash)
+    {
         $result = array();
         $minLatitude = -90;
         $maxLatitude = 90;
@@ -301,11 +306,12 @@ class GeoHash implements GeoAdapter {
      * @param string $direction the direction of the neighbor (top, bottom, left or right)
      * @return string the geohash of the adjacent cell
      */
-    public static function adjacent($hash, $direction){
+    public static function adjacent($hash, $direction)
+    {
         $last = substr($hash, -1);
-        $type = (strlen($hash) % 2)? 'odd': 'even';
+        $type = (strlen($hash) % 2) ? 'odd' : 'even';
         $base = substr($hash, 0, strlen($hash) - 1);
-        if(strpos((self::$borders[$direction][$type]), $last) !== false){
+        if (strpos((self::$borders[$direction][$type]), $last) !== false) {
             $base = self::adjacent($base, $direction);
         }
         return $base . self::$characterTable[strpos(self::$neighbours[$direction][$type], $last)];

@@ -1,5 +1,4 @@
 <?php
-
 namespace geoPHP\Geometry;
 
 use geoPHP\geoPHP;
@@ -9,13 +8,16 @@ use geoPHP\geoPHP;
  *
  * @method Polygon[] getComponents()
  */
-class MultiPolygon extends MultiSurface {
+class MultiPolygon extends MultiSurface
+{
 
-    public function geometryType() {
+    public function geometryType()
+    {
         return Geometry::MULTI_POLYGON;
     }
 
-    public function centroid() {
+    public function centroid()
+    {
         if ($this->isEmpty()) {
             return null;
         }
@@ -28,7 +30,7 @@ class MultiPolygon extends MultiSurface {
         $x = 0;
         $y = 0;
         $totalArea = 0;
-        foreach($this->getComponents() as $component) {
+        foreach ($this->getComponents() as $component) {
             if ($component->isEmpty()) {
                 continue;
             }
@@ -41,7 +43,8 @@ class MultiPolygon extends MultiSurface {
         return new Point($x / $totalArea, $y / $totalArea);
     }
 
-    public function area() {
+    public function area()
+    {
         if ($this->getGeos()) {
             /** @noinspection PhpUndefinedMethodInspection */
             return $this->getGeos()->area();
@@ -54,7 +57,8 @@ class MultiPolygon extends MultiSurface {
         return $area;
     }
 
-    public function boundary() {
+    public function boundary()
+    {
         $rings = [];
         foreach ($this->getComponents() as $component) {
             $rings = array_merge($rings, $component->components);
