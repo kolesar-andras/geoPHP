@@ -1,0 +1,12 @@
+{
+  "name": "swen100-geophp",
+  "version": "1.0.0",
+  "description": "(Forked from original) funiq/geoPHP",
+  "main": "geoPHP.php",
+  "repository": {
+    "url": "https://github.com/swen100/geoPHP.git",
+    "type": "git"
+  },
+  "author": "Swen Zanon",
+  "license": "GPL-2.0-or-later"
+}
