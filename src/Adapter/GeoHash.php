@@ -118,7 +118,7 @@ class GeoHash implements GeoAdapter
         } else {
             // The GeoHash is the smallest hash grid ID that fits the envelope
             $envelope = $geometry->envelope();
-            $geoHashes = array();
+            $geoHashes = [];
             $geohash = '';
             foreach ($envelope->getPoints() as $point) {
                 $geoHashes[] = $this->encodePoint($point, 0.0000001);
@@ -213,7 +213,7 @@ class GeoHash implements GeoAdapter
      */
     private function decode($hash)
     {
-        $result = array();
+        $result = [];
         $minLatitude = -90;
         $maxLatitude = 90;
         $minLongitude = -180;

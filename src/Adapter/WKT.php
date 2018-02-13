@@ -141,7 +141,7 @@ class WKT implements GeoAdapter
         }
 
         $parts = explode(',', $data_string);
-        $points = array();
+        $points = [];
         foreach ($parts as $part) {
             $points[] = $this->parsePoint($part);
         }
@@ -316,7 +316,7 @@ class WKT implements GeoAdapter
      */
     public function extractData($geometry)
     {
-        $parts = array();
+        $parts = [];
         switch ($geometry->geometryType()) {
             case Geometry::POINT:
                 $p = $geometry->x() . ' ' . $geometry->y();

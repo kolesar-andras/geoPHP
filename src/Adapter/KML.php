@@ -77,7 +77,7 @@ class KML implements GeoAdapter
 
     protected function geomFromXML()
     {
-        $geometries = array();
+        $geometries = [];
         $placemark_elements = $this->xmlObject->getElementsByTagName('placemark');
         if ($placemark_elements->length) {
             foreach ($placemark_elements as $placemark) {
@@ -130,7 +130,7 @@ class KML implements GeoAdapter
     protected function parseLineString($xml)
     {
         $coordinates = $this->_extractCoordinates($xml);
-        $point_array = array();
+        $point_array = [];
         $hasZ = false;
         $hasM = false;
         foreach ($coordinates as $set) {
@@ -146,7 +146,7 @@ class KML implements GeoAdapter
 
     protected function parsePolygon($xml)
     {
-        $components = array();
+        $components = [];
 
         /** @noinspection SpellCheckingInspection */
         $outer_boundaryis = $this->childElements($xml, 'outerboundaryis');
@@ -178,7 +178,7 @@ class KML implements GeoAdapter
 
     protected function parseGeometryCollection($xml)
     {
-        $components = array();
+        $components = [];
         $geom_types = geoPHP::getGeometryList();
         foreach ($xml->childNodes as $child) {
             /** @noinspection SpellCheckingInspection */
@@ -194,7 +194,7 @@ class KML implements GeoAdapter
     protected function _extractCoordinates($xml)
     {
         $coordinateElements = $this->childElements($xml, 'coordinates');
-        $coordinates = array();
+        $coordinates = [];
         if (!empty($coordinateElements)) {
             $coordinateSets = explode(' ', preg_replace('/[\r\n\s\t]+/', ' ', $coordinateElements[0]->nodeValue));
 

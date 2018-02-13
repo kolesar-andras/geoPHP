@@ -353,7 +353,7 @@ abstract class Geometry
         $processor_type = geoPHP::CLASS_NAMESPACE . 'Adapter\\' . geoPHP::getAdapterMap()[$format];
         $processor = new $processor_type();
         array_unshift($args, $this);
-        $result = call_user_func_array(array($processor, 'write'), $args);
+        $result = call_user_func_array([$processor, 'write'], $args);
 
         return $result;
     }

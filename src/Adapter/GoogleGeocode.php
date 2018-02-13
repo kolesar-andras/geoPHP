@@ -75,14 +75,14 @@ class GoogleGeocode implements GeoAdapter
                 }
             } else {
                 if ($return_type == 'point') {
-                    $points = array();
+                    $points = [];
                     foreach ($this->result->results as $delta => $item) {
                         $points[] = $this->getPoint($delta);
                     }
                     return new MultiPoint($points);
                 }
                 if ($return_type == 'bounds' || $return_type == 'polygon') {
-                    $polygons = array();
+                    $polygons = [];
                     foreach ($this->result->results as $delta => $item) {
                         $polygons[] = $this->getPolygon($delta);
                     }

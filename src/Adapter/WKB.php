@@ -201,7 +201,7 @@ class WKB implements GeoAdapter
             return new LineString();
         }
 
-        $components = array();
+        $components = [];
         for ($i = 0; $i < $line_length; ++$i) {
             $point = $this->getPoint();
             if ($point) {
@@ -216,7 +216,7 @@ class WKB implements GeoAdapter
         // Get the number of linestring expected in this poly out of the first 4 bytes
         $poly_length = $this->reader->readUInt32();
 
-        $components = array();
+        $components = [];
         $i = 1;
         while ($i <= $poly_length) {
             $ring = $this->getLineString();
@@ -234,7 +234,7 @@ class WKB implements GeoAdapter
         // Get the number of items expected in this multi out of the first 4 bytes
         $multi_length = $this->reader->readUInt32();
 
-        $components = array();
+        $components = [];
         for ($i = 0; $i < $multi_length; $i++) {
             $component = $this->getGeometry();
             $component->setSRID(null);

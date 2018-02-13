@@ -42,7 +42,7 @@ class GeoJSON implements GeoAdapter
 
         // Check to see if it's a FeatureCollection
         if ($input->type == 'FeatureCollection') {
-            $geometries = array();
+            $geometries = [];
             foreach ($input->features as $feature) {
                 $geometries[] = $this->read($feature);
             }
@@ -129,7 +129,7 @@ class GeoJSON implements GeoAdapter
 
     private function arrayToLineString($array)
     {
-        $points = array();
+        $points = [];
         foreach ($array as $comp_array) {
             $points[] = $this->arrayToPoint($comp_array);
         }
@@ -139,7 +139,7 @@ class GeoJSON implements GeoAdapter
 
     private function arrayToPolygon($array)
     {
-        $lines = array();
+        $lines = [];
         foreach ($array as $comp_array) {
             $lines[] = $this->arrayToLineString($comp_array);
         }
@@ -153,7 +153,7 @@ class GeoJSON implements GeoAdapter
      */
     private function arrayToMultiPoint($array)
     {
-        $points = array();
+        $points = [];
         foreach ($array as $comp_array) {
             $points[] = $this->arrayToPoint($comp_array);
         }
@@ -167,7 +167,7 @@ class GeoJSON implements GeoAdapter
      */
     private function arrayToMultiLineString($array)
     {
-        $lines = array();
+        $lines = [];
         foreach ($array as $comp_array) {
             $lines[] = $this->arrayToLineString($comp_array);
         }
@@ -181,7 +181,7 @@ class GeoJSON implements GeoAdapter
      */
     private function arrayToMultiPolygon($array)
     {
-        $polygons = array();
+        $polygons = [];
         foreach ($array as $comp_array) {
             $polygons[] = $this->arrayToPolygon($comp_array);
         }
@@ -195,7 +195,7 @@ class GeoJSON implements GeoAdapter
      */
     private function geoJSONObjectToGeometryCollection($obj)
     {
-        $geometries = array();
+        $geometries = [];
         if (!isset($obj->geometries)) {
             throw new \Exception('Invalid GeoJSON: GeometryCollection with no component geometries');
         }

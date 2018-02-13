@@ -292,12 +292,12 @@ abstract class Collection extends Geometry
     public function flatten()
     {
         if ($this->hasZ()) {
-            $new_components = array();
+            $new_components = [];
             foreach ($this->components as $component) {
                 $component->flatten();
                 $new_components[] = $component;
             }
-            $type = 'geoPHP\\Geometry\\' . $this->geometryType();
+            $type = geoPHP::CLASS_NAMESPACE . 'Geometry\\' . $this->geometryType();
             return new $type($new_components);
         } else {
             return $this;

@@ -43,7 +43,7 @@ abstract class MultiGeometry extends Collection
             return $this->getGeos()->boundary();
         }
 
-        $components_boundaries = array();
+        $components_boundaries = [];
         foreach ($this->components as $component) {
             $components_boundaries[] = $component->boundary();
         }
