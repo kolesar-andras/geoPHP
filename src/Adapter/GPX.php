@@ -199,12 +199,16 @@ class GPX implements GeoAdapter
                     /** @noinspection SpellCheckingInspection */
                     $points[] = $this->parsePoint($trkpt);
                 }
-                $lines[] = new LineString($points);
+                if (count($points)>1) {
+                    $lines[] = new LineString($points);
+                }
             }
-            $multiLine = new MultiLineString($lines);
-            $multiLine->setData($this->parseNodeProperties($trk, $this->gpxTypes->get('trkType')));
-            $multiLine->setData('gpxType', 'track');
-            $collection[] = $multiLine;
+            if (!empty($lines)) {
+                $multiLine = new MultiLineString($lines);
+                $multiLine->setData($this->parseNodeProperties($trk, $this->gpxTypes->get('trkType')));
+                $multiLine->setData('gpxType', 'track');
+                $collection[] = $multiLine;
+            }
         }
         return $collection;
     }
