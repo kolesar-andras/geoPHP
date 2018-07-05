@@ -306,7 +306,7 @@ class geoPHP
         if (empty($geometryTypes)) {
             return null;
         }
-        if (count($geometryTypes) == 1) {
+        if (count($geometryTypes) == 1 && stripos($geometryTypes[0], 'MULTI') === false) {
             if (count($geometries) == 1) {
                 return $geometries[0];
             } else {
