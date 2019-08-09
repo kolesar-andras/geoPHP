@@ -629,6 +629,15 @@ abstract class Geometry
         throw UnsupportedMethodException::geos(__METHOD__);
     }
 
+    public function makeValid()
+    {
+        if ($this->getGeos()) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            return geoPHP::geosToGeometry($this->getGeos()->makeValid());
+        }
+        throw UnsupportedMethodException::geos(__METHOD__);
+    }
+
     public function disjoint(Geometry $geometry)
     {
         if ($this->getGeos()) {
